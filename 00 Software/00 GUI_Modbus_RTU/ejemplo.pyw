@@ -3,16 +3,10 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import sys
-import serial
-import time
+from enum import Enum
+from diccionario_modbus import Listado_Holding_Registers, Accion_Modbus, Tipo_Registro_Modbus
 
-class Hilo(QThread):
-    ser = serial.Serial(port='COM5', baudrate= 9600, parity=serial.PARITY_NONE, bytesize= 8, stopbits= 1)
-    def __init__(self):
-        super(Hilo, self).__init__()
-        self.s = self.ser.read()
-        print(self.s)
-        time.sleep(0.2)
+estado_boton = 0
 
 
 class MyWindow(QMainWindow):
@@ -23,21 +17,43 @@ class MyWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.label = QtWidgets.QLabel(self)
-        self.label.move(50,50)
+        #etiqueta
+        self.etiqueta = QtWidgets.QLabel(self)
+        self.etiqueta.move(120,20)
+        self.etiqueta.setText("")
+        #boton
+        self.boton = QtWidgets.QPushButton(self)
+        self.boton.setText("Conectar")
+        self.boton.move(10,20)
+        self.boton.clicked.connect(self.accion_onclick_boton)
+        #desplegable accion
+        self.desplegable = QtWidgets.QComboBox(self)
+        self.desplegable.resize(180, 30)
+        self.desplegable.move(10, 100)
+        self.desplegable.addItems(Tipo_Registro_Modbus)
+        self.desplegable.setDisabled(True)
+        #desplegable indices
+        self.desplegable1 = QtWidgets.QComboBox(self)
+        self.desplegable1.resize(80, 30)
+        self.desplegable1.move(10, 60)
+        self.desplegable1.addItems(Accion_Modbus)
+        self.desplegable1.setDisabled(True)
 
-        self.b1 = QtWidgets.QPushButton(self)
-        self.b1.setText("Enter in Matrix")
-        self.b1.move(50,18)
-        self.b1.clicked.connect(self.accion_onclick_b1)
+    def accion_onclick_boton(self):
+        global estado_boton
+        global Cricket
+        if estado_boton == 0:
+            estado_boton = 1
+            self.boton.setText("Desconectar")
+            self.desplegable.setDisabled(False)
+            self.desplegable1.setDisabled(False)
+        else:
+            estado_boton= 0
+            self.boton.setText("Conectar")
+            self.desplegable.setDisabled(True)
+            self.desplegable1.setDisabled(True)
 
-    def accion_onclick_b1(self):
-        self.hilo = Hilo()
-        self.hilo.start()
 
-
-    def update(self):
-        self.label.adjustSize()
 
 #Función donde se define la ejecución de la solución desarrollada
 def window():
