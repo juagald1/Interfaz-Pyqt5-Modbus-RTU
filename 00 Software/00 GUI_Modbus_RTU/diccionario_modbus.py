@@ -1,21 +1,21 @@
 
 Listado_Holding_Registers = [
-'Nombre_Sistema',
-'ID_Dispositivo',
-'Tipo_Comunicacion',
+'Nombre Sistema',
+'ID Dispositivo',
+'Tipo Comunicacion',
 
 ]
 
 Listado_Input_Registers = [
-'Nombre_Sistema',
-'ID_Dispositivo',
-'Tipo_Comunicacion',
+'Tensión',
+'Corriente',
+'Potencia',
 
 ]
 
 Tipo_Registro_Modbus = [
-'Holding_Register',
-'Input_Register',
+'Holding Register',
+'Input Register',
 
 ]
 
